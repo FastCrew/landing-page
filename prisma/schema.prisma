@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id                String        @id @default(uuid())
+  email             String
+  role              Role          @default(worker)
+  name              String?
+  phone             String?
+  city              String?
+  skills            Json?
+  companyName       String?       @map("company_name")
+  companyVat        String?       @map("company_vat")
+  businessRequested Boolean       @default(false) @map("business_requested")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @default(now()) @updatedAt @map("updated_at")
+  applications      Application[] @relation("WorkerApplications")
+  bookingsConfirmed Booking[]     @relation("BookingConfirmer")
+  jobsCreated       Job[]         @relation("JobCreator")
+  reviewsReceived   Review[]      @relation("Ratee")
+  reviewsGiven      Review[]      @relation("Rater")
+
+  @@map("profiles")
+}
+
+model Job {
+  id           String        @id @default(uuid())
+  createdBy    String        @map("created_by")
+  title        String
+  description  String
+  location     String
+  hourlyRate   Decimal       @map("hourly_rate") @db.Decimal(10, 2)
+  joiningBy    DateTime?     @map("joining_by")
+  status       JobStatus     @default(open)
+  createdAt    DateTime      @default(now()) @map("created_at")
+  applications Application[]
+  creator      Profile       @relation("JobCreator", fields: [createdBy], references: [id])
+  reviews      Review[]
+
+  @@map("jobs")
+}
+
+model Application {
+  id        String            @id @default(uuid())
+  jobId     String            @map("job_id")
+  workerId  String            @map("worker_id")
+  coverNote String?           @map("cover_note")
+  status    ApplicationStatus @default(applied)
+  createdAt DateTime          @default(now()) @map("created_at")
+  job       Job               @relation(fields: [jobId], references: [id])
+  worker    Profile           @relation("WorkerApplications", fields: [workerId], references: [id])
+  booking   Booking?
+
+  @@map("applications")
+}
+
+model Booking {
+  id            String        @id @default(uuid())
+  applicationId String        @unique @map("application_id")
+  confirmedBy   String        @map("confirmed_by")
+  start         DateTime
+  end           DateTime
+  status        BookingStatus @default(confirmed)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  application   Application   @relation(fields: [applicationId], references: [id])
+  confirmer     Profile       @relation("BookingConfirmer", fields: [confirmedBy], references: [id])
+
+  @@map("bookings")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  jobId     String   @map("job_id")
+  raterId   String   @map("rater_id")
+  rateeId   String   @map("ratee_id")
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now()) @map("created_at")
+  job       Job      @relation(fields: [jobId], references: [id])
+  ratee     Profile  @relation("Ratee", fields: [rateeId], references: [id])
+  rater     Profile  @relation("Rater", fields: [raterId], references: [id])
+
+  @@map("reviews")
+}
+
+enum Role {
+  worker
+  business
+  admin
+}
+
+enum JobStatus {
+  open
+  closed
+  filled
+}
+
+enum ApplicationStatus {
+  applied
+  reviewed
+  accepted
+  rejected
+}
+
+enum BookingStatus {
+  confirmed
+  completed
+  canceled
+}

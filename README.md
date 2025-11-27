@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FastCrew
 
-## Getting Started
+**Private Commercial SaaS Platform**
 
-First, run the development server:
+> [INTERNAL VALUE PROPOSITION: e.g., Connecting businesses with on-demand workforce seamlessly.]
 
+---
+
+### ⚠️ WARNING: PRIVATE REPOSITORY
+**PROPRIETARY SOURCE CODE. DO NOT DISTRIBUTE.**
+This codebase contains confidential intellectual property. Unauthorized access, copying, or distribution is strictly prohibited.
+
+---
+
+## 🛠 Tech Stack
+
+**Core Framework**
+-   **Framework:** [Next.js 16](https://nextjs.org/) (App Router)
+-   **Language:** TypeScript
+-   **Runtime:** Node.js
+
+**Frontend & UI**
+-   **Styling:** Tailwind CSS
+-   **Components:** Radix UI (Headless), Lucide React (Icons)
+-   **Animation:** Framer Motion
+-   **Validation:** Zod
+
+**Backend & Data**
+-   **Database:** PostgreSQL
+-   **ORM:** Prisma
+-   **Authentication:** Clerk
+-   **Storage/Realtime:** Supabase
+-   **AWS SDK:** S3 Integration
+
+---
+
+## 📋 Prerequisites
+
+Ensure you have the following installed on your local machine:
+
+-   **Node.js:** v20.x or higher (LTS recommended)
+-   **Package Manager:** npm (detected via `package-lock.json`)
+
+---
+
+## 🚀 Getting Started (Runbook)
+
+Follow these steps to get the development environment running:
+
+### 1. Clone the Repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd fastcrew
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Configure Environment Variables
+We use `dotenv` for secret management. **Never commit `.env` files.**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1.  Copy the example file:
+    ```bash
+    cp .env.example .env.local
+    ```
+2.  **Action Required:** Fill in the secrets in `.env.local` from our password manager (1Password/Doppler). You will need keys for:
+    -   Clerk (Publishable/Secret Keys)
+    -   Supabase (URL/Anon Key)
+    -   Database URL (PostgreSQL connection string)
+    -   AWS Credentials
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Install Dependencies
+```bash
+npm install
+```
 
-## Learn More
+### 4. Database Setup
+Ensure your local or dev database is reachable, then generate the Prisma client:
+```bash
+npm run db:generate
+npm run db:push:dev # Pushes schema to the development database
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 5. Start Development Server
+```bash
+npm run dev
+```
+The app should now be running at `http://localhost:3000`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📜 Available Scripts
 
-## Deploy on Vercel
+| Script | Description |
+| :--- | :--- |
+| `npm run dev` | Starts the development server with hot-reloading. |
+| `npm run build` | Builds the application for production. |
+| `npm run start` | Starts the production server (after build). |
+| `npm run lint` | Runs ESLint to catch code quality issues. |
+| `npm run typecheck` | Runs TypeScript compiler to check for type errors. |
+| `npm run format` | Formats code using Prettier. |
+| `npm run db:studio` | Opens Prisma Studio to view/edit database records. |
+| `npm run db:push` | Pushes the Prisma schema state to the database (prototyping). |
+| `npm run db:migrate` | Runs production database migrations. |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📂 Project Structure
+
+```text
+/src
+├── /app            # Next.js App Router pages and layouts
+├── /components     # Reusable UI components (Radix/Shadcn)
+├── /lib            # Utility libraries and configurations
+├── /types          # TypeScript type definitions
+├── /utils          # Helper functions
+├── /db             # Database connection and logic
+└── /scripts        # Maintenance and setup scripts
+```
+
+---
+
+## 🚀 Deployment
+
+**Platform:** Vercel
+
+-   **Production:** Commits to the `main` branch trigger a deployment to the Production environment.
+-   **Preview:** Pull Requests trigger a Preview deployment for testing and QA.
+-   **Manual:** Deploys are currently managed manually or via git triggers.
+
+---
+
+**Maintainer:** Engineering Team
