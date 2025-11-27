@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from '@/components/ui/input'
 import { toast } from '@/hooks/use-toast'
 import type { Profile } from '@/db/schema'
-import { ArrowLeft, UserCheck, Mail, Phone, MapPin, Calendar, Wrench, Search } from 'lucide-react'
+import { ArrowLeft, UserCheck, Mail, Phone, MapPin, Calendar, Wrench, Search, Trash2 } from 'lucide-react'
 
 export default function WorkersPage() {
     const { user, isLoaded } = useUser()
@@ -23,6 +23,9 @@ export default function WorkersPage() {
     const [selectedWorker, setSelectedWorker] = useState<Profile | null>(null)
     const [dialogOpen, setDialogOpen] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+    const [workerToDelete, setWorkerToDelete] = useState<Profile | null>(null)
+    const [isDeleting, setIsDeleting] = useState(false)
 
     useEffect(() => {
         if (isLoaded && user) {
@@ -76,6 +79,47 @@ export default function WorkersPage() {
     const handleWorkerClick = (worker: Profile) => {
         setSelectedWorker(worker)
         setDialogOpen(true)
+    }
+
+    const handleDeleteClick = (e: React.MouseEvent, worker: Profile) => {
+        e.stopPropagation() // Prevent card click
+        setWorkerToDelete(worker)
+        setDeleteDialogOpen(true)
+    }
+
+    const handleDeleteConfirm = async () => {
+        if (!workerToDelete) return
+
+        setIsDeleting(true)
+        try {
+            const response = await fetch(`/api/users/${workerToDelete.id}/delete`, {
+                method: 'DELETE',
+            })
+
+            if (!response.ok) {
+                const error = await response.json()
+                throw new Error(error.error || 'Failed to delete user')
+            }
+
+            toast({
+                title: "Success",
+                description: `User ${workerToDelete.name || workerToDelete.email} has been deleted successfully.`,
+            })
+
+            // Refresh the workers list
+            await loadData()
+            setDeleteDialogOpen(false)
+            setWorkerToDelete(null)
+        } catch (error) {
+            console.error('Error deleting user:', error)
+            toast({
+                title: "Error",
+                description: error instanceof Error ? error.message : "Failed to delete user",
+                variant: "destructive",
+            })
+        } finally {
+            setIsDeleting(false)
+        }
     }
 
     const filteredWorkers = workers.filter(worker =>
@@ -176,6 +220,14 @@ export default function WorkersPage() {
                                             {worker.email}
                                         </CardDescription>
                                     </div>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                        onClick={(e) => handleDeleteClick(e, worker)}
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
                                 </div>
                             </CardHeader>
                             <CardContent>
@@ -198,9 +250,9 @@ export default function WorkersPage() {
                                     </div>
                                     {worker.skills && Array.isArray(worker.skills) && worker.skills.length > 0 && (
                                         <div className="flex flex-wrap gap-1 mt-2">
-                                            {worker.skills.slice(0, 3).map((skill, i) => (
+                                            {(worker.skills as string[]).slice(0, 3).map((skill, i) => (
                                                 <Badge key={i} variant="secondary" className="text-xs">
-                                                    {skill}
+                                                    {String(skill)}
                                                 </Badge>
                                             ))}
                                             {worker.skills.length > 3 && (
@@ -293,9 +345,9 @@ export default function WorkersPage() {
                                             Skills
                                         </h3>
                                         <div className="flex flex-wrap gap-2 pl-6">
-                                            {selectedWorker.skills.map((skill, i) => (
+                                            {(selectedWorker.skills as string[]).map((skill, i) => (
                                                 <Badge key={i} variant="secondary">
-                                                    {skill}
+                                                    {String(skill)}
                                                 </Badge>
                                             ))}
                                         </div>
@@ -327,6 +379,53 @@ export default function WorkersPage() {
                                 <div className="flex justify-end gap-2 pt-4 border-t">
                                     <Button variant="outline" onClick={() => setDialogOpen(false)}>
                                         Close
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                    </DialogContent>
+                </Dialog>
+
+                {/* Delete Confirmation Dialog */}
+                <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle className="flex items-center gap-2 text-destructive">
+                                <Trash2 className="h-5 w-5" />
+                                Delete User
+                            </DialogTitle>
+                            <DialogDescription>
+                                This action cannot be undone. This will permanently delete the user and all associated data.
+                            </DialogDescription>
+                        </DialogHeader>
+
+                        {workerToDelete && (
+                            <div className="space-y-4">
+                                <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
+                                    <p className="text-sm font-medium mb-2">The following data will be deleted:</p>
+                                    <ul className="text-sm space-y-1 list-disc list-inside text-muted-foreground">
+                                        <li>User profile: <strong>{workerToDelete.name || workerToDelete.email}</strong></li>
+                                        <li>All job applications by this user</li>
+                                        <li>All jobs created by this user</li>
+                                        <li>All bookings associated with this user</li>
+                                        <li>All reviews given and received by this user</li>
+                                    </ul>
+                                </div>
+
+                                <div className="flex justify-end gap-2 pt-4 border-t">
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => setDeleteDialogOpen(false)}
+                                        disabled={isDeleting}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        variant="destructive"
+                                        onClick={handleDeleteConfirm}
+                                        disabled={isDeleting}
+                                    >
+                                        {isDeleting ? 'Deleting...' : 'Delete User'}
                                     </Button>
                                 </div>
                             </div>
