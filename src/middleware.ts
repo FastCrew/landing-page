@@ -71,20 +71,11 @@ export default clerkMiddleware(async (auth, req) => {
 
       // Check email verification (only in production)
       const requireEmailVerification = process.env.NODE_ENV === 'production'
-      console.log('[Middleware] NODE_ENV:', process.env.NODE_ENV, 'Require verification:', requireEmailVerification)
 
       const hasVerifiedEmail = user.emailAddresses.some(email =>
         email.id === user.primaryEmailAddressId &&
         (!requireEmailVerification || email.verification?.status === 'verified')
       )
-
-      console.log('[Middleware] User emails:', user.emailAddresses.map(e => ({
-        id: e.id,
-        email: e.emailAddress,
-        verified: e.verification?.status,
-        isPrimary: e.id === user.primaryEmailAddressId
-      })))
-      console.log('[Middleware] Has verified email:', hasVerifiedEmail)
 
       if (!hasVerifiedEmail) {
         console.log('[Middleware] User email not verified, redirecting to sign-in')
@@ -116,8 +107,24 @@ export default clerkMiddleware(async (auth, req) => {
           console.log('[Middleware] Admin user on onboarding, redirecting to admin dashboard')
           return NextResponse.redirect(new URL('/dashboard/admin', req.url))
         }
-        // If already completed, redirect to dashboard
+        // If already completed, redirect based on role
         if (hasCompletedOnboarding) {
+          console.log('[Middleware] User already onboarded, checking role for redirect')
+
+          try {
+            const profile = await prisma.profile.findUnique({
+              where: { id: userId },
+              select: { role: true }
+            })
+
+            if (profile?.role === 'worker') {
+              console.log('[Middleware] Worker onboarded, redirecting to homepage')
+              return NextResponse.redirect(new URL('/', req.url))
+            }
+          } catch (error) {
+            console.error('[Middleware] Error fetching profile role:', error)
+          }
+
           console.log('[Middleware] User already onboarded, redirecting to dashboard')
           return NextResponse.redirect(new URL('/dashboard', req.url))
         }

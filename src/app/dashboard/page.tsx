@@ -31,9 +31,9 @@ export default function DashboardPage() {
 
         // Redirect based on role
         if (profile.role === 'worker') {
-          router.push('/dashboard/worker')
+          router.push('/')
         } else if (profile.role === 'business') {
-          router.push('/dashboard/business')
+          router.push('/')
         } else if (profile.role === 'admin') {
           router.push('/dashboard/admin')
         }

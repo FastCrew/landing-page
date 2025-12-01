@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { useUser } from '@clerk/nextjs'
-import { UserButton } from '@/components/user-button'
-import { ThemeToggle } from '@/components/theme-toggle'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -19,7 +17,7 @@ import type { Profile, Job, Application } from '@/db/schema'
 import { ApplicationDetailsDialog } from '@/components/dashboard/ApplicationDetailsDialog'
 
 export default function WorkerDashboard() {
-  const { user } = useUser()
+  const { user, isLoaded } = useUser()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [jobs, setJobs] = useState<Job[]>([])
   const [applications, setApplications] = useState<Application[]>([])
@@ -34,8 +32,10 @@ export default function WorkerDashboard() {
   const appliedJobIds = new Set(applications.map((app) => app.jobId));
 
   useEffect(() => {
-    loadData()
-  }, [])
+    if (isLoaded && user) {
+      loadData()
+    }
+  }, [isLoaded, user])
 
   const loadData = async () => {
     if (!user) return
@@ -132,15 +132,9 @@ export default function WorkerDashboard() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Worker Dashboard</h1>
-            <p className="text-muted-foreground mt-1">Find and manage your work opportunities</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <UserButton />
-          </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold tracking-tight">Worker Dashboard</h1>
+          <p className="text-muted-foreground mt-1">Find and manage your work opportunities</p>
         </div>
 
         {/* Profile Summary */}

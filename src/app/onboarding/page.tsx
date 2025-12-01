@@ -58,9 +58,13 @@ export default function OnboardingPage() {
           if (data.profile) {
             toast({
               title: "Welcome back!",
-              description: "Redirecting to your dashboard...",
+              description: "Redirecting you...",
             })
-            router.push('/dashboard')
+            if (data.profile.role === 'worker') {
+              router.push('/')
+            } else {
+              router.push('/dashboard')
+            }
           }
         }
       } catch (error) {
@@ -109,7 +113,11 @@ export default function OnboardingPage() {
         description: "Welcome to Fastcrew!",
       })
 
-      router.push('/dashboard')
+      if (formData.role === 'worker') {
+        router.push('/')
+      } else {
+        router.push('/dashboard')
+      }
     } catch (error) {
       console.error('Error creating profile:', error)
       toast({

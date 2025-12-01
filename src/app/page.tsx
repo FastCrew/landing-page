@@ -2,7 +2,8 @@
 
 import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useUser, useClerk } from "@clerk/nextjs";
+import { useEffect, useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/sections/HeroSection";
@@ -16,7 +17,23 @@ import { useToast } from "@/lib/hooks/useToast";
 export default function Page() {
   const { toast, showToast } = useToast();
   const router = useRouter();
-  const { isSignedIn, isLoaded } = useUser();
+  const { user, isSignedIn, isLoaded } = useUser();
+  const { signOut } = useClerk();
+  const [userRole, setUserRole] = useState<"worker" | "business" | "admin">("worker");
+
+  // Fetch user profile to determine role
+  useEffect(() => {
+    if (isSignedIn && user) {
+      fetch("/api/profile")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.profile?.role) {
+            setUserRole(data.profile.role);
+          }
+        })
+        .catch((err) => console.error("Error fetching profile:", err));
+    }
+  }, [isSignedIn, user]);
 
   const handleAction = (
     type: "hire" | "work" | "signup" | "login" | "sales"
@@ -50,11 +67,28 @@ export default function Page() {
     }
   };
 
+  const handleLogout = async () => {
+    await signOut();
+    router.push("/");
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header
+        isLoggedIn={isSignedIn}
+        role={userRole}
+        userProfile={
+          isSignedIn && user
+            ? {
+              name: user.fullName || undefined,
+              email: user.primaryEmailAddress?.emailAddress || undefined,
+              imageUrl: user.imageUrl || undefined,
+            }
+            : undefined
+        }
         onSignup={() => handleAction("signup")}
         onLogin={() => handleAction("login")}
+        onLogout={handleLogout}
       />
 
       <main className="flex-1">

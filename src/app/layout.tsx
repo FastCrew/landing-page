@@ -17,8 +17,15 @@ const fontMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Fastcrew - On-demand Workforce Marketplace',
+  title: {
+    default: 'Fastcrew - On-demand Workforce Marketplace',
+    template: '%s | Fastcrew',
+  },
   description: 'Connect hospitality businesses with vetted workers',
+  icons: {
+    icon: '/favicon.ico'
+    // apple: '/apple-icon.png',
+  },
 }
 
 export default function RootLayout({

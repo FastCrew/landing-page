@@ -1,13 +1,41 @@
+"use client";
+
 import Link from "next/link";
+import Image from "next/image";
+import { useTheme } from "next-themes";
+import { useState, useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 
 export function Footer() {
+  const { theme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const getLogoSrc = () => {
+    if (!mounted) return "/logo-light.svg";
+    const currentTheme = resolvedTheme || theme;
+    return currentTheme === "dark" ? "/logo-dark.svg" : "/logo-light.svg";
+  };
+
   return (
     <footer className="bg-background border-t border-border/50">
       <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16 lg:px-20 xl:px-28 py-16">
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           <div className="space-y-4">
-            <h3 className="text-xl font-bold tracking-tight">FastCrew</h3>
+            <Link href="/" className="inline-block">
+              {mounted && (
+                <Image
+                  src={getLogoSrc()}
+                  alt="Fastcrew"
+                  width={128}
+                  height={30}
+                  className="h-7 w-auto"
+                />
+              )}
+            </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
               The modern platform for flexible work opportunities. Connecting talent with businesses seamlessly.
             </p>

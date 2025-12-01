@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { useUser } from '@clerk/nextjs'
-import { UserButton } from '@/components/user-button'
-import { ThemeToggle } from '@/components/theme-toggle'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -163,17 +161,11 @@ export default function BusinessDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div>
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Business Dashboard</h1>
-            <p className="text-muted-foreground mt-1">Manage your job postings and applications</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <UserButton />
-          </div>
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold tracking-tight">Business Dashboard</h1>
+          <p className="text-muted-foreground mt-1">Manage your job postings and applications</p>
         </div>
 
         {/* Stats Cards */}

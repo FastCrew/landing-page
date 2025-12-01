@@ -6,9 +6,7 @@
   :root {
     /* Apple-style Light Mode */
     --background: 0 0% 98%;
-    /* Zinc 50 */
     --foreground: 240 10% 3.9%;
-    /* Zinc 950 */
 
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
@@ -17,11 +15,9 @@
     --popover-foreground: 240 10% 3.9%;
 
     --primary: 240 5.9% 10%;
-    /* Zinc 900 */
     --primary-foreground: 0 0% 98%;
 
     --secondary: 240 4.8% 95.9%;
-    /* Zinc 100 */
     --secondary-foreground: 240 5.9% 10%;
 
     --muted: 240 4.8% 95.9%;
@@ -38,7 +34,6 @@
     --ring: 240 5.9% 10%;
 
     --radius: 1rem;
-    /* More rounded for Apple feel */
   }
 
   .dark {
@@ -96,4 +91,189 @@
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* ============================================ */
+/* Clerk Dark Mode Styling - Premium & Modern */
+/* ============================================ */
+
+.dark .cl-rootBox,
+.dark .cl-card,
+.dark .cl-signIn-root,
+.dark .cl-signUp-root {
+  --clerk-color-background: hsl(240, 10%, 8%);
+  --clerk-color-text: hsl(0, 0%, 98%);
+  --clerk-color-text-secondary: hsl(240, 5%, 70%);
+  --clerk-color-primary: hsl(0, 0%, 98%);
+  --clerk-color-primary-hover: hsl(0, 0%, 90%);
+  --clerk-color-danger: hsl(0, 84%, 60%);
+  --clerk-color-success: hsl(142, 76%, 36%);
+  --clerk-color-warning: hsl(38, 92%, 50%);
+
+  /* Input fields */
+  --clerk-color-input-background: hsl(240, 8%, 12%);
+  --clerk-color-input-text: hsl(0, 0%, 98%);
+  --clerk-color-input-border: hsl(240, 6%, 25%);
+  --clerk-color-input-border-focus: hsl(0, 0%, 60%);
+  --clerk-color-input-placeholder: hsl(240, 5%, 50%);
+
+  /* Buttons */
+  --clerk-color-button-primary: hsl(0, 0%, 98%);
+  --clerk-color-button-primary-text: hsl(240, 10%, 8%);
+  --clerk-color-button-primary-hover: hsl(0, 0%, 90%);
+
+  /* Links */
+  --clerk-color-link: hsl(210, 100%, 70%);
+  --clerk-color-link-hover: hsl(210, 100%, 80%);
+
+  /* Borders and dividers */
+  --clerk-color-border: hsl(240, 6%, 20%);
+  --clerk-color-divider: hsl(240, 6%, 20%);
+
+  /* Cards and surfaces */
+  --clerk-color-surface: hsl(240, 10%, 10%);
+  --clerk-color-surface-secondary: hsl(240, 8%, 14%);
+
+  /* Shadows for depth */
+  --clerk-shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Form Labels */
+.dark .cl-formFieldLabel,
+.dark .cl-formFieldLabel__label,
+.dark .cl-formFieldLabelRow__label {
+  color: hsl(0, 0%, 90%) !important;
+  font-weight: 500;
+}
+
+/* Input Fields */
+.dark .cl-formFieldInput,
+.dark .cl-input {
+  background-color: hsl(240, 8%, 12%) !important;
+  border-color: hsl(240, 6%, 25%) !important;
+  color: hsl(0, 0%, 98%) !important;
+}
+
+.dark .cl-formFieldInput:focus,
+.dark .cl-input:focus {
+  border-color: hsl(0, 0%, 60%) !important;
+  box-shadow: 0 0 0 2px hsla(0, 0%, 60%, 0.1) !important;
+}
+
+.dark .cl-formFieldInput::placeholder,
+.dark .cl-input::placeholder {
+  color: hsl(240, 5%, 50%) !important;
+}
+
+/* Headers and Main Text */
+.dark .cl-headerTitle,
+.dark .cl-headerSubtitle,
+.dark .cl-socialButtonsBlockButton__text,
+.dark .cl-dividerText,
+.dark .cl-identityPreviewText,
+.dark .cl-formButtonPrimary {
+  color: hsl(0, 0%, 95%) !important;
+}
+
+/* Links */
+.dark .cl-footerActionLink {
+  color: hsl(210, 100%, 70%) !important;
+}
+
+.dark .cl-footerActionLink:hover {
+  color: hsl(210, 100%, 80%) !important;
+}
+
+/* Cards and Containers */
+.dark .cl-card,
+.dark .cl-socialButtonsBlockButton,
+.dark .cl-footer {
+  background-color: hsl(240, 10%, 8%) !important;
+  border-color: hsl(240, 6%, 20%) !important;
+}
+
+.dark .cl-dividerLine {
+  background-color: hsl(240, 6%, 20%) !important;
+}
+
+/* Social Buttons */
+.dark .cl-socialButtonsBlockButton {
+  border-color: hsl(240, 6%, 25%) !important;
+  background-color: hsl(240, 8%, 12%) !important;
+}
+
+.dark .cl-socialButtonsBlockButton:hover {
+  background-color: hsl(240, 8%, 16%) !important;
+  border-color: hsl(240, 6%, 30%) !important;
+}
+
+/* Primary Button */
+.dark .cl-formButtonPrimary {
+  background-color: hsl(0, 0%, 98%) !important;
+  color: hsl(240, 10%, 8%) !important;
+  font-weight: 600;
+}
+
+.dark .cl-formButtonPrimary:hover {
+  background-color: hsl(0, 0%, 90%) !important;
+}
+
+/* Error Messages */
+.dark .cl-formFieldErrorText {
+  color: hsl(0, 84%, 65%) !important;
+}
+
+/* Success Messages */
+.dark .cl-formFieldSuccessText {
+  color: hsl(142, 76%, 45%) !important;
+}
+
+/* Optional Badges - FIX FOR INVISIBLE TEXT */
+.dark .cl-formFieldOptionalBadge,
+.dark .cl-badge {
+  color: hsl(240, 5%, 65%) !important;
+  background-color: hsl(240, 8%, 15%) !important;
+  border: 1px solid hsl(240, 6%, 25%) !important;
+}
+
+/* Footer Text - FIX FOR "Secured by" */
+.dark .cl-footerActionText,
+.dark .cl-internal-b3fm6y,
+.dark [class*="cl-footer"] span,
+.dark [class*="cl-footer"] a {
+  color: hsl(240, 5%, 60%) !important;
+}
+
+/* Development Mode Badge */
+.dark .cl-badge[data-localization-key*="developmentMode"],
+.dark .cl-badge[data-localization-key*="development"] {
+  color: hsl(38, 92%, 65%) !important;
+  background-color: hsl(38, 92%, 12%) !important;
+  border-color: hsl(38, 92%, 25%) !important;
+}
+
+/* Ensure all small/hint text is visible */
+.dark .cl-formFieldHintText,
+.dark .cl-formFieldInfoText,
+.dark .cl-otpCodeFieldInput,
+.dark .cl-selectButton__countryCode,
+.dark .cl-selectButton__countryCodeText,
+.dark .cl-formFieldAction__link {
+  color: hsl(240, 5%, 70%) !important;
+}
+
+/* Catch-all for any remaining invisible text */
+.dark .cl-rootBox span,
+.dark .cl-card span,
+.dark .cl-signIn-root span,
+.dark .cl-signUp-root span {
+  color: inherit;
+}
+
+/* Ensure proper text color inheritance */
+.dark .cl-rootBox,
+.dark .cl-card,
+.dark .cl-signIn-root,
+.dark .cl-signUp-root {
+  color: hsl(0, 0%, 95%);
 }
